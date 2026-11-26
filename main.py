@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 """The 3AM Commit Message — make.fun entry (program/v1).
 
+Entry (102 chars, one line):
+    fix: resolved merge conflict between me at 2am and me at 3am, 3am me won, 2am me has filed a complaint
+
 Writes the winning one-line git commit message to /output/entry.txt
-and prints it to stdout, byte-identical every run.
+and prints it to stdout, byte-identical every run. The gate is
+1-139 chars, single line, UTF-8, not only whitespace; the pinned
+EXPECTED_LEN below guards against silent edits to the winning line.
 """
 
 import os
@@ -12,6 +17,7 @@ ENTRY = "fix: resolved merge conflict between me at 2am and me at 3am, 3am me wo
 
 MIN_CHARS = 1
 MAX_CHARS = 139
+EXPECTED_LEN = 102
 
 
 def validate_entry(line: str) -> None:
@@ -25,6 +31,8 @@ def validate_entry(line: str) -> None:
     n = len(line)
     if not (MIN_CHARS <= n <= MAX_CHARS):
         raise ValueError(f"entry is {n} chars, must be {MIN_CHARS}-{MAX_CHARS}")
+    if n != EXPECTED_LEN:
+        raise ValueError(f"entry is {n} chars, expected exactly {EXPECTED_LEN} (winning line changed?)")
     line.encode("utf-8")  # raises if not valid UTF-8 text
 
 
